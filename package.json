@@ -22,7 +22,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "build": "tsc && cp nodes/VertexAdvanced/gemini.svg dist/gemini.svg",
+    "build": "tsc && cp nodes/VertexAdvanced/vertex-ai.svg dist/vertex-ai.svg",
     "dev": "tsc --watch",
     "format": "prettier --write .",
     "lint": "eslint nodes credentials",

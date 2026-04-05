@@ -9,7 +9,7 @@ import * as video from './video';
 export const versionDescription: INodeTypeDescription = {
   displayName: 'Vertex AI Advanced',
   name: 'vertexAdvanced',
-  icon: 'file:gemini.svg',
+  icon: 'file:vertex-ai.svg',
   group: ['transform'],
   version: [1, 1.1],
   defaultVersion: 1.1,
