@@ -140,7 +140,7 @@ All region logic is handled internally — you just select the region in your cr
 ## Development
 
 ```bash
-git clone https://github.com/<your-username>/n8n-nodes-vertex-advanced.git
+git clone https://github.com/airesearch-official/n8n-nodes-vertex-advanced.git
 cd n8n-nodes-vertex-advanced
 npm install
 npm run build

@@ -11,14 +11,14 @@
     "multimodal"
   ],
   "license": "MIT",
-  "homepage": "",
+  "homepage": "https://github.com/airesearch-official/n8n-nodes-vertex-advanced",
   "author": {
     "name": "",
     "email": ""
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/<your-username>/n8n-nodes-vertex-advanced.git"
+    "url": "https://github.com/airesearch-official/n8n-nodes-vertex-advanced.git"
   },
   "main": "index.js",
   "scripts": {
