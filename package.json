@@ -1,0 +1,57 @@
+{
+  "name": "n8n-nodes-vertex-advanced",
+  "version": "1.0.0",
+  "description": "n8n community node for Google Vertex AI with advanced multimodal capabilities",
+  "keywords": [
+    "n8n-community-node-package",
+    "google-vertex",
+    "vertex-ai",
+    "gemini",
+    "ai",
+    "multimodal"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "author": {
+    "name": "",
+    "email": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/<your-username>/n8n-nodes-vertex-advanced.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && cp nodes/VertexAdvanced/gemini.svg dist/gemini.svg",
+    "dev": "tsc --watch",
+    "format": "prettier --write .",
+    "lint": "eslint nodes credentials",
+    "lintfix": "eslint nodes credentials --fix"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "nodes": [
+      "dist/VertexAdvanced.node.js"
+    ],
+    "credentials": []
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.2",
+    "@typescript-eslint/parser": "^7.15.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-n8n-nodes-base": "^1.16.1",
+    "gulp": "^4.0.2",
+    "n8n-workflow": "*",
+    "prettier": "^3.3.0",
+    "typescript": "^5.5.0"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  },
+  "dependencies": {
+    "zod-to-json-schema": "^3.23.5"
+  }
+}
