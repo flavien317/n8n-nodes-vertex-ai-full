@@ -20,19 +20,43 @@ type GoogleApiCredentials = {
   region?: string;
 };
 
+const BASE_URL = 'https://aiplatform.googleapis.com';
+
 function buildVertexUrl(
   endpoint: string,
   projectId: string,
   region: string,
 ): string {
-  const transformed = endpoint
-    .replace(/^\/v1beta\//, `/v1beta1/projects/${projectId}/locations/${region}/publishers/google/`)
-    .replace(
+  const prefix = `/v1beta1/projects/${projectId}/locations/${region}/publishers/google`;
+
+  let transformed: string;
+  if (endpoint.startsWith('/v1beta/')) {
+    transformed = endpoint.replace(/^\/v1beta\//, `${prefix}/`);
+  } else if (endpoint.startsWith('/upload/v1beta/')) {
+    transformed = endpoint.replace(
       /^\/upload\/v1beta\//,
       `/v1beta1/projects/${projectId}/locations/${region}/`,
     );
+  } else if (endpoint.startsWith('/projects/')) {
+    // Full resource path from model list dropdown
+    transformed = `/v1beta1${endpoint}`;
+  } else if (endpoint.startsWith('/models/')) {
+    // Already has models/ prefix
+    transformed = `${prefix}${endpoint}`;
+  } else if (endpoint.startsWith('/models:')) {
+    // Model method without model name
+    transformed = `${prefix}${endpoint}`;
+  } else if (endpoint.startsWith('/v1beta1/')) {
+    // Already fully formed
+    transformed = endpoint;
+  } else {
+    // Bare model name like /gemini-2.5-flash:generateContent
+    // Inject /models/ between publishers/google and the model name
+    const bareName = endpoint.replace(/^\//, '');
+    transformed = `${prefix}/models/${bareName}`;
+  }
 
-  return `https://${region}-aiplatform.googleapis.com${transformed}`;
+  return `${BASE_URL}${transformed}`;
 }
 
 export async function apiRequest(
@@ -72,7 +96,35 @@ export async function apiRequest(
     Object.assign(options, option);
   }
 
-  return await this.helpers.httpRequest.call(this, options as any);
+  const bodyStr = body
+    ? typeof body === 'string'
+      ? body.length > 500
+        ? body.substring(0, 500) + '... [truncated]'
+        : body
+      : JSON.stringify(body, null, 2).length > 500
+        ? JSON.stringify(body, null, 2).substring(0, 500) + '... [truncated]'
+        : JSON.stringify(body, null, 2)
+    : '(empty)';
+
+  console.log('[VertexAdvanced] === REQUEST ===');
+  console.log('[VertexAdvanced] URL:', url);
+  console.log('[VertexAdvanced] Method:', method);
+  console.log('[VertexAdvanced] Body:', bodyStr);
+  console.log('[VertexAdvanced] ===============');
+
+  try {
+    const response = await this.helpers.httpRequest.call(this, options as any);
+    return response;
+  } catch (error: any) {
+    const errorData = error.response?.data ?? error.message;
+    console.error('[VertexAdvanced] === REQUEST FAILED ===');
+    console.error('[VertexAdvanced] URL:', url);
+    console.error('[VertexAdvanced] Method:', method);
+    console.error('[VertexAdvanced] Status:', error.response?.status ?? 'N/A');
+    console.error('[VertexAdvanced] Error:', typeof errorData === 'string' ? errorData : JSON.stringify(errorData, null, 2));
+    console.error('[VertexAdvanced] =======================');
+    throw error;
+  }
 }
 
 export function getRegion(this: IExecuteFunctions | ILoadOptionsFunctions): string {

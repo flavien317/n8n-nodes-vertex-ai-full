@@ -23,7 +23,14 @@ async function baseModelSearch(
   }
 
   return {
-    results: models.map((model) => ({ name: model.name, value: model.name })),
+    results: models.map((model) => {
+      // Extract bare model name from full resource path
+      // e.g. "projects/x/locations/y/publishers/google/models/gemini-2.5-flash" -> "gemini-2.5-flash"
+      const fullName = model.name;
+      const modelsIndex = fullName.lastIndexOf('/models/');
+      const bareName = modelsIndex !== -1 ? fullName.substring(modelsIndex + 8) : fullName;
+      return { name: bareName, value: bareName };
+    }),
   };
 }
 

@@ -62,8 +62,12 @@ function createJwt(credentials: ServiceAccountCredentials): string {
   const sign = createSign('RSA-SHA256');
   sign.update(signingInput);
   const signature = sign.sign(formattedKey, 'base64');
+  const signatureBase64Url = signature
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
 
-  return `${signingInput}.${base64UrlEncode(signature)}`;
+  return `${signingInput}.${signatureBase64Url}`;
 }
 
 export async function getVertexAccessToken(
