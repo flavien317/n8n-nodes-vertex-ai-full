@@ -12,7 +12,7 @@ export const versionDescription: INodeTypeDescription = {
   name: 'vertexAdvanced',
   icon: 'file:vertex-ai.svg',
   group: ['transform'],
-  version: 1
+  version: 1,
   subtitle: '={{ $parameter["operation"] + ": " + $parameter["resource"] }}',
   description: 'Interact with Google Vertex AI models — multimodal text, image, audio, and video',
   defaults: {
