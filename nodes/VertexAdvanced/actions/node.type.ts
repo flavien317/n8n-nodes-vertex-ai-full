@@ -3,6 +3,7 @@ type NodeMap = {
   image: 'analyze' | 'generate' | 'edit';
   video: 'analyze' | 'generate';
   audio: 'transcribe' | 'analyze';
+  document: 'analyze';
 };
 
 export type VertexAdvancedType = {
