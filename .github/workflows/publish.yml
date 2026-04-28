@@ -1,14 +1,18 @@
 name: Publish to NPM
 
 on:
-  release:
-    types: [published] # Se déclenche quand tu crées une "Release" sur GitHub
+  push:
+    branches:
+      - main  # Change par 'master' si ta branche principale s'appelle master
+    paths:
+      - 'package.json' # Optionnel: ne lance le workflow que si tu as touché au package.json
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
