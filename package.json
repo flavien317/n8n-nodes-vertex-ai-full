@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-vertex-ai-full",
-  "version": "0.0.1",
+  "version": "0.0.13",
   "description": "n8n community node for Google Vertex AI with advanced multimodal capabilities",
   "keywords": [
     "n8n",
