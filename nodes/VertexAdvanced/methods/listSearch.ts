@@ -112,6 +112,25 @@ export async function imageEditModelSearch(
   };
 }
 
+export async function documentModelSearch(
+	this: ILoadOptionsFunctions,
+	filter?: string,
+): Promise<INodeListSearchResult> {
+	// Fetch all models from the API and keep only multimodal-capable ones
+	// (gemini models support documents/images; exclude embedding, tts, image-gen, veo)
+	return await baseModelSearch.call(
+		this,
+		(model) =>
+			model.includes('gemini') &&
+			!model.includes('embedding') &&
+			!model.includes('aqa') &&
+			!model.includes('tts') &&
+			!model.includes('veo') &&
+			!model.toLowerCase().includes('image'),
+		filter,
+	);
+}
+
 export async function videoGenerationModelSearch(
   this: ILoadOptionsFunctions,
   filter?: string,
