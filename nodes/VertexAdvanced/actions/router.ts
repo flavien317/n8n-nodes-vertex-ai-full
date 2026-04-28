@@ -1,6 +1,7 @@
 import { NodeOperationError, type IExecuteFunctions, type INodeExecutionData } from 'n8n-workflow';
 
 import * as audio from './audio';
+import * as document from './document';
 import * as image from './image';
 import type { VertexAdvancedType } from './node.type';
 import * as text from './text';
@@ -22,6 +23,9 @@ export async function router(this: IExecuteFunctions) {
   switch (vertexAdvancedTypeData.resource) {
     case 'audio':
       execute = audio[vertexAdvancedTypeData.operation].execute;
+      break;
+    case 'document':
+      execute = document[vertexAdvancedTypeData.operation].execute;
       break;
     case 'image':
       execute = image[vertexAdvancedTypeData.operation].execute;
