@@ -2,6 +2,7 @@
 import { NodeConnectionTypes, type INodeTypeDescription } from 'n8n-workflow';
 
 import * as audio from './audio';
+import * as document from './document';
 import * as image from './image';
 import * as text from './text';
 import * as video from './video';
@@ -72,6 +73,11 @@ export const versionDescription: INodeTypeDescription = {
           value: 'audio',
         },
         {
+          name: 'Document',
+          value: 'document',
+          description: 'Analyze PDFs, images and other documents with AI',
+        },
+        {
           name: 'Image',
           value: 'image',
         },
@@ -87,6 +93,7 @@ export const versionDescription: INodeTypeDescription = {
       default: 'text',
     },
     ...audio.description,
+    ...document.description,
     ...image.description,
     ...text.description,
     ...video.description,
