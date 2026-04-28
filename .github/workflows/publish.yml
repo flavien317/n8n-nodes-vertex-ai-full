@@ -3,9 +3,8 @@ name: Publish to NPM
 on:
   push:
     branches:
-      - main  # Change par 'master' si ta branche principale s'appelle master
-    paths:
-      - 'package.json' # Optionnel: ne lance le workflow que si tu as touché au package.json
+      - main
+  workflow_dispatch: # Ceci ajoute un bouton pour le lancer à la main
 
 jobs:
   publish:
