@@ -1,9 +1,13 @@
-# n8n-nodes-vertex-advanced
+# n8n-nodes-vertex-ai-full
 
 [![n8n Community Node](https://img.shields.io/badge/n8n-community%20node-ff6d5a?style=flat-square)](https://www.n8n.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
 A production-grade n8n community node that brings the polished UI/UX of the official n8n Gemini node to **Google Cloud Vertex AI** — powered entirely by Service Account authentication.
+
+> **Based on [n8n-nodes-vertex-advanced](https://github.com/airesearch-official/n8n-nodes-vertex-advanced) by [airesearch-official](https://github.com/airesearch-official)** — extended with Document analysis support and additional improvements.
+
+---
 
 ## Why This Node Exists
 
@@ -15,6 +19,8 @@ This means you can:
 - **Bypass AI Studio API limits** with Vertex AI's higher throughput
 - **Leverage existing GCP infrastructure** — service accounts, IAM policies, audit logging
 - **Access the full model catalog** including preview and region-specific models
+
+---
 
 ## Key Features
 
@@ -42,6 +48,17 @@ This means you can:
 - **Analyze videos** from URLs or binary data
 - Return as binary file or downloadable URL
 
+### Document — Analyze *(added in this fork)*
+- **Analyze PDFs, images, and text files** with any Gemini multimodal model
+- Supports PDF, plain text, HTML, Markdown, CSV, RTF, JPEG, PNG, WebP, GIF, HEIC
+- Input from binary data (previous node) or public URL
+- Automatic MIME type detection from binary metadata
+- Multi-document support — pass multiple files separated by comma
+- Options: System Message, Temperature, Top-P, Top-K, Max Tokens, Thinking Budget
+- Only sends parameters supported by the Vertex AI API — no risk of 400 errors
+
+---
+
 ## Installation
 
 ### Via n8n UI
@@ -49,14 +66,14 @@ This means you can:
 1. Open your n8n instance
 2. Go to **Settings** → **Community Nodes**
 3. Click **Install**
-4. Enter `n8n-nodes-vertex-advanced`
+4. Enter `n8n-nodes-vertex-ai-full`
 5. Click **Install** and restart n8n
 
 ### Via npm (self-hosted)
 
 ```bash
 cd ~/.n8n/custom
-npm install n8n-nodes-vertex-advanced
+npm install n8n-nodes-vertex-ai-full
 ```
 
 Then restart n8n.
@@ -65,8 +82,10 @@ Then restart n8n.
 
 ```bash
 cd ~/.n8n/custom
-pnpm add n8n-nodes-vertex-advanced
+pnpm add n8n-nodes-vertex-ai-full
 ```
+
+---
 
 ## Authentication Guide
 
@@ -105,10 +124,12 @@ gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
 
 ### Step 5: Use the Node
 
-1. Add the **Vertex AI Advanced** node to your workflow
+1. Add the **Vertex AI Full** node to your workflow
 2. Select your Google Service Account credential
 3. Enter your **GCP Project ID**
-4. Choose a resource (Text, Image, Audio, Video) and configure as needed
+4. Choose a resource (Text, Image, Audio, Video, Document) and configure as needed
+
+---
 
 ## Region Handling
 
@@ -119,15 +140,17 @@ The node automatically handles regional routing:
 
 All region logic is handled internally — you just select the region in your credential.
 
+---
+
 ## Architecture
 
 ```
 ┌─────────────────┐     ┌──────────────────────┐     ┌─────────────────────────┐
-│   n8n Workflow  │────▶│  Vertex AI Advanced  │────▶│  Vertex AI API          │
+│   n8n Workflow  │────▶│  Vertex AI Full      │────▶│  Vertex AI API          │
 │                 │     │  Node                │     │  aiplatform.googleapis  │
 │  Binary Data    │     │                      │     │  .com                   │
 │  Text Input     │     │  JWT Auth (SA)       │     │                         │
-│  Configuration  │     │  Base64 inlineData   │     │  Gemini / Imagen / Veo  │
+│  PDF / Image    │     │  Base64 inlineData   │     │  Gemini / Imagen / Veo  │
 └─────────────────┘     └──────────────────────┘     └─────────────────────────┘
 ```
 
@@ -136,12 +159,15 @@ All region logic is handled internally — you just select the region in your cr
 - **No file uploads**: Binary data is converted to Base64 and embedded as `inlineData` directly in the API payload — no intermediate GCS uploads or polling
 - **Service Account JWT auth**: Generates OAuth2 Bearer tokens via JWT Bearer grant flow — no API keys
 - **Unified base URL**: All requests go to `aiplatform.googleapis.com` with the region specified in the path only
+- **Dynamic model list**: All model dropdowns are fetched live from the Vertex AI API — no hardcoded lists, future models appear automatically
+
+---
 
 ## Development
 
 ```bash
-git clone https://github.com/airesearch-official/n8n-nodes-vertex-advanced.git
-cd n8n-nodes-vertex-advanced
+git clone https://github.com/flavien317/n8n-nodes-vertex-ai-full.git
+cd n8n-nodes-vertex-ai-full
 npm install
 npm run build
 ```
@@ -149,18 +175,36 @@ npm run build
 To use during development, symlink the `dist` folder into your n8n custom nodes directory:
 
 ```bash
-ln -s $(pwd)/dist ~/.n8n/custom/n8n-nodes-vertex-advanced
+ln -s $(pwd)/dist ~/.n8n/custom/n8n-nodes-vertex-ai-full
 ```
 
+---
+
 ## Supported Models
+
+Models are loaded dynamically from the Vertex AI API — the list below reflects current availability but will update automatically as Google releases new models.
 
 | Resource | Models |
 |----------|--------|
 | **Text** | Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.0 Flash, and all Gemini text models |
-| **Image Generation** | Gemini 2.5 Flash Image (Nano Banana), Imagen 3, Imagen 4 |
+| **Image Generation** | Gemini 2.5 Flash Image, Imagen 3, Imagen 4 |
 | **Image Analysis** | All Gemini multimodal models |
 | **Audio** | Gemini 2.5 Flash, Gemini 2.0 Flash, and all audio-capable Gemini models |
 | **Video Generation** | Veo 2, Veo 3, and all Veo models |
+| **Document Analysis** | All Gemini multimodal models (recommended: Gemini 2.5 Pro/Flash for large PDFs) |
+
+---
+
+## Credits
+
+This project is a fork and extension of **[n8n-nodes-vertex-advanced](https://github.com/airesearch-official/n8n-nodes-vertex-advanced)** by [airesearch-official](https://github.com/airesearch-official), published under the MIT license.
+
+**Changes made in this fork:**
+- Added **Document resource** — analyze PDFs, images, and text files with Gemini multimodal models
+- Dynamic model search for all resources — models fetched live from the API
+- Package renamed to `n8n-nodes-vertex-ai-full` and node renamed to `Vertex AI Full`
+
+---
 
 ## License
 
