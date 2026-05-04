@@ -110,14 +110,6 @@ const properties: INodeProperties[] = [
         typeOptions: { minValue: 1, numberPrecision: 0 },
       },
       {
-        displayName: 'Number of Completions',
-        name: 'candidateCount',
-        default: 1,
-        description: 'How many completions to generate for each prompt',
-        type: 'number',
-        typeOptions: { minValue: 1, maxValue: 8, numberPrecision: 0 },
-      },
-      {
         displayName: 'Output Randomness (Temperature)',
         name: 'temperature',
         default: 1,
@@ -180,7 +172,7 @@ export async function execute(this: IExecuteFunctions, i: number): Promise<INode
   // Only send fields explicitly set by the user to avoid API rejections
   const generationConfig: GenerateContentGenerationConfig = {};
   if (options.maxOutputTokens !== undefined) generationConfig.maxOutputTokens = options.maxOutputTokens;
-  if (options.candidateCount !== undefined) generationConfig.candidateCount = options.candidateCount;
+  if (options.candidateCount !== undefined && options.candidateCount !== 1) generationConfig.candidateCount = options.candidateCount;
   if (options.temperature !== undefined) generationConfig.temperature = options.temperature;
   if (options.topP !== undefined) generationConfig.topP = options.topP;
   if (options.topK !== undefined) generationConfig.topK = options.topK;
